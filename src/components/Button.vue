@@ -1,8 +1,11 @@
+// 做一個最上方的按鈕群來做分頁
+
 <template>
   <div id="button">
+    <!-- 加no-gutters讓button之間沒有空隙 -->
     <div class="row no-gutters">
       <div class="col-sm">
-        <router-link :to="'/'">
+        <router-link :to="'home'">
           <b-button
             block
             variant="outline-primary"

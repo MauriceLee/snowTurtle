@@ -1,4 +1,5 @@
 <template>
+  <!-- 加container來把整個畫面控在中間 -->
   <div id="app" class="container">
     <Button />
   </div>

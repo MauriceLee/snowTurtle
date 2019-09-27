@@ -7,7 +7,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home
     },
@@ -20,6 +20,7 @@ export default new Router({
       path: '/todolist',
       name: 'todolist',
       component: () => import('@/components/Todolist/Todolist.vue'),
+      // 當作篩選的參數用，所以不用import component
       children: [
         {
           path: 'active',
@@ -38,7 +39,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/home'
     }
   ]
 })
