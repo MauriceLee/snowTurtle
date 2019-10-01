@@ -1,12 +1,15 @@
 <template>
   <div id="todolist">
     <Input />
-    <b-card
-      title="Card Title"
-      no-body
-    >
+    <b-card no-body>
       <Nav />
-      <ListItem />
+      <b-list-group flush>
+        <ListItem
+          v-for="index in todoIndex"
+          :key="index"
+          :index="index"
+        />
+      </b-list-group>
       <ListFooter />
     </b-card>
   </div>
@@ -24,6 +27,14 @@
       Nav,
       ListItem,
       ListFooter
+    },
+    computed: {
+      todoIndex() {
+        return this.$store.getters.todoIndex;
+      }
+    },
+    mounted() {
+      this.$store.dispatch("INIT_TODOS");
     }
   };
 </script>

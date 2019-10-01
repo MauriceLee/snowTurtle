@@ -28,20 +28,7 @@ export default new Vuex.Store({
   strict: true,
   state: {
     // Todolist
-    todos: [
-      {
-        content: 'todo-content',
-        complete: false
-      },
-      {
-        content: 'todo-content',
-        complete: true
-      },
-      {
-        content: 'todo-content',
-        complete: false
-      }
-    ]
+    todos: []
   },
   getters: {
     todoIndex(state) {
@@ -69,7 +56,8 @@ export default new Vuex.Store({
       LS.save(state.todos)
     },
     UPDATE_TODO(state, { index, data }) {
-      state.todos[index] = data
+      state.todos[index].content = data.content
+      state.todos[index].complete = data.complete
       LS.save(state.todos)
     }
   },

@@ -12,6 +12,12 @@ Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 sync(store, router)
 
+Vue.directive('focus', {
+  inserted: function(el) {
+    el.focus()
+  }
+})
+
 new Vue({
   router,
   store,
