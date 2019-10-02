@@ -1,10 +1,12 @@
 <template>
   <div id="Nav">
     <b-card-header header-tag="nav">
+      <!-- card-header為了要讓padding=0，tabs為了要讓nav有框線 -->
       <b-nav
         card-header
         tabs
       >
+        <!-- 三個屬性是為了nav與router結合時的寫法 -->
         <b-nav-item
           to="/todolist"
           exact

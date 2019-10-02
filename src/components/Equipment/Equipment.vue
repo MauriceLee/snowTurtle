@@ -6,13 +6,16 @@
 </template>
 
 <script>
-import Carousel from '@/components/Equipment/Carousel.vue'
-import Card from '@/components/Equipment/Card.vue'
+  import Carousel from "@/components/Equipment/Carousel.vue";
+  import Card from "@/components/Equipment/Card.vue";
 
-export default {
-  components: {
-    Carousel,
-    Card
-  }
-}
+  export default {
+    components: {
+      Carousel,
+      Card
+    },
+    mounted() {
+      this.$store.dispatch("INIT_BUYCARTS");
+    }
+  };
 </script>

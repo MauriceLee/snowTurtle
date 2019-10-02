@@ -1,8 +1,11 @@
 <template>
   <div id="todolist">
     <Input />
+    <!-- 用b-card來增加外圍框限讓他看起來想是一個element, 然後no-body是要讓padding=0 -->
     <b-card no-body>
       <Nav />
+      <!-- flush是讓整個group內的子組件都不要各自獨立(四個角不要圓角)，無法直接用在子組件上 -->
+      <!-- 第三個屬性是為了傳入index給ListItem這層組件 -->
       <b-list-group flush>
         <ListItem
           v-for="index in todoIndex"

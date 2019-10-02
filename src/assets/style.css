@@ -1,0 +1,19 @@
+.modal-title {
+  font-family: monospace;
+  font-size: 30px;
+}
+.modal-body {
+  padding: 0;
+}
+.table {
+  font-family: monospace;
+  font-size: 17px;
+  text-align: center;
+  margin: 0;
+}
+.alert {
+  font-family: monospace;
+  font-size: 16px;
+  text-align: right;
+  margin: 0;
+}
