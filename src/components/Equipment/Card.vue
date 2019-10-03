@@ -23,7 +23,8 @@
             {{ cart.text }}
           </b-card-text>
         </div>
-        <b-card-footer>
+        <!-- 不可以用b-card-footer這個標籤，否則footer彼此不能對齊 -->
+        <template v-slot:footer>
           <b-row
             class="text-center"
             no-gutters
@@ -53,7 +54,7 @@
               >Buy</b-button>
             </b-col>
           </b-row>
-        </b-card-footer>
+        </template>
       </b-card>
     </b-card-group>
   </div>

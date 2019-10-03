@@ -1,7 +1,8 @@
 <template>
   <div id="modal">
-    <!-- id一定要寫才可以被另一端綁定 -->
+    <!-- id一定要寫才可以被另一端綁定，寫ref的原因是為了可以使用this.$refs["modal-center"].hide() -->
     <b-modal
+      ref="modal-center"
       id="modal-center"
       centered
       title="Cart"
@@ -14,7 +15,7 @@
         <template v-slot:cell(Check)="row">
           <b-button
             variant="danger"
-            @click="deleteHandler(row.index, row.item)"
+            @click="deleteHandler(row.index)"
           >
             Delete
           </b-button>
@@ -24,12 +25,12 @@
       <b-alert
         show
         variant="success"
-      >Total price：0 NTD</b-alert>
+      >Total price：{{ this.$store.getters.totalPrice }} NTD</b-alert>
       <!-- 不寫v-slot:modal-foot按鈕就不會在右 -->
       <template v-slot:modal-footer>
         <b-button
           variant="info"
-          @click="checkoutHandler(totalPrice)"
+          @click="checkoutHandler"
         >Checkout</b-button>
         <b-button
           variant="secondary"
@@ -39,3 +40,21 @@
     </b-modal>
   </div>
 </template>
+
+<script>
+  export default {
+    methods: {
+      deleteHandler(index) {
+        this.$store.commit("DELETE_MODAL", index);
+      },
+      checkoutHandler() {
+        this.$store.commit("CHECKOUT_CART");
+      }
+    },
+    updated() {
+      if (this.$store.state.closeModal === true) {
+        this.$refs["modal-center"].hide();
+      }
+    }
+  };
+</script>

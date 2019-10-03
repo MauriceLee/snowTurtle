@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -37,6 +38,9 @@ const filter = {
 export default new Vuex.Store({
   strict: true,
   state: {
+    // Home
+    weatherItems: [],
+
     // Equipment
     fields: ['#', 'Item', 'Price', 'Number', 'Total', 'Check'],
     carts: [
@@ -66,6 +70,8 @@ export default new Vuex.Store({
       }
     ],
     buyCarts: [],
+    closeModal: false,
+
     // Todolist
     todos: []
   },
@@ -79,9 +85,27 @@ export default new Vuex.Store({
           state.todos.indexOf(todo)
         )
       }
+    },
+    totalPrice(state) {
+      let totalPrice = 0
+      for (let i = 0; i < state.buyCarts.length; i++) {
+        totalPrice += state.buyCarts[i].Total
+      }
+      return totalPrice
     }
   },
   mutations: {
+    // Home
+    SET_WEATHER(state, payload) {
+      let newPayload = [
+        ['Country', payload.data.city.country],
+        ['City', payload.data.city.name],
+        ['Weather', payload.data.list[0].weather[0].main],
+        ['Temperature', payload.data.list[0].main.temp]
+      ]
+      state.weatherItems = newPayload
+    },
+
     // ********** Equipment Start **********
     SET_BUYCARTS(state, data) {
       state.buyCarts = data
@@ -94,20 +118,49 @@ export default new Vuex.Store({
       state.carts[index].Number++
     },
     BUY_CART(state, index) {
+      if (state.carts[index].Number === 0) return
+      let cloneCarts = Object.assign({}, state.carts[index])
       let findItem = state.buyCarts.find(
-        buyCart => buyCart.Item === state.carts[index].Item
+        buyCart => buyCart.Item === cloneCarts.Item
       )
-      let findNumber = JSON.parse(JSON.stringify(state.carts[index]))
       if (findItem === undefined) {
         let findIndex = state.buyCarts.length
-        state.buyCarts.push(state.carts[index])
-        state.buyCarts[findIndex].Number = findNumber.Number
+        state.buyCarts.push(cloneCarts)
         state.buyCarts[findIndex]['#'] = findIndex + 1
       } else {
-        state.buyCarts[findItem['#'] - 1].Number += state.carts[index].Number
+        state.buyCarts[findItem['#'] - 1].Number += cloneCarts.Number
       }
+      state.buyCarts.forEach(
+        buyCart => (buyCart.Total = buyCart.Price * buyCart.Number)
+      )
+      state.closeModal = false
       state.carts[index].Number = 0
       LS.save.equipment(state.buyCarts)
+    },
+    DELETE_MODAL(state, index) {
+      const deletItem = state.buyCarts[index].Item
+      if (
+        confirm(`Do you really want to delete the item " ${deletItem} " ？`)
+      ) {
+        state.buyCarts.splice(index, 1)
+        for (let i = 0; i < state.buyCarts.length; i++) {
+          state.buyCarts[i]['#'] = i + 1
+        }
+        LS.save.equipment(state.buyCarts)
+        if (state.buyCarts.length === 0) {
+          state.closeModal = true
+        }
+      }
+    },
+    CHECKOUT_CART(state) {
+      if (state.buyCarts.length === 0) return
+      const totalPrice = this.getters.totalPrice
+      if (confirm('Do you really want to checkout your cart ？')) {
+        alert(`Has been deducted ${totalPrice} dollars from your credit card！`)
+        state.buyCarts = []
+        LS.save.equipment(state.buyCarts)
+        state.closeModal = true
+      }
     },
     // ********** Equipment End **********
 
@@ -135,17 +188,24 @@ export default new Vuex.Store({
     // ********** Todolist End **********
   },
   actions: {
-    // ********** Equipment Start **********
+    // Home
+    GET_WEATHER({ commit }) {
+      Axios.get(
+        'https://api.openweathermap.org/data/2.5/forecast?q=Niseko,JP&APPID=c674981b3e07e38b9b49ac5b4b480167&units=metric'
+      ).then(res => {
+        commit('SET_WEATHER', res)
+      })
+    },
+
+    //Equipment Start
     INIT_BUYCARTS({ commit }) {
       commit('SET_BUYCARTS', LS.load.equipment())
     },
-    // ********** Equipment End **********
 
-    // ********** Todolist Start **********
+    //Todolist Start
     INIT_TODOS({ commit }) {
       // load LS
       commit('SET_TODOS', LS.load.todolist())
     }
-    // ********** Todolist End **********
   }
 })

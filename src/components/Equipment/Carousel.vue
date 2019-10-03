@@ -29,7 +29,7 @@
       <b-button
         v-b-modal.modal-center
         variant="info"
-      >Cart (0)</b-button>
+      >Cart ( {{ this.$store.state.buyCarts.length }} )</b-button>
     </b-jumbotron>
     <!-- modal + table -->
     <Modal />
